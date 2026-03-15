@@ -1,0 +1,93 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+*.pyc
+
+# ============================================================
+# Environment & Secrets  (KABHI PUSH MAT KARNA!)
+# ============================================================
+.env
+.env.local
+.env.*.local
+venv/
+.venv/
+env/
+
+# ============================================================
+# Model Files  (too large — train karke regenerate kar lena)
+# ============================================================
+models/*.pt
+models/*.pkl
+models/*.pth
+models/eval_plots/
+
+# src/models ke andar bhi
+src/models/*.pt
+src/models/*.pth
+src/models/*.pkl
+src/models/*.png
+
+# ============================================================
+# Processed / Cached Data  (script se regenerate ho jata hai)
+# ============================================================
+processed/*.pkl
+processed/cache/
+
+# src ke andar processed folders
+src/processed/
+src/phase3/processed/
+
+# ============================================================
+# Raw Dataset  (Kaggle se download karo)
+# ============================================================
+src/fake_job_postings.csv
+*.csv
+
+# ============================================================
+# Jupyter Notebook Checkpoints
+# ============================================================
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# ============================================================
+# IDE / Editor
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================================
+# OS Generated Files
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ============================================================
+# Logs & Temp Files
+# ============================================================
+*.log
+logs/
+tmp/
+temp/
+
+# ============================================================
+# Large Progress / Planning Text Files
+# ============================================================
+Current_Progress.txt
+plan.txt
+*.txt.bak

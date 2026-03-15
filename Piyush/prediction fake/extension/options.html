@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobTrust — Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0F1117;
+      --bg-secondary: #161822;
+      --bg-card: #1C1E2B;
+      --border: #282B3D;
+      --border-focus: #0D9488;
+      --text-primary: #E4E5EA;
+      --text-secondary: #9599AD;
+      --text-muted: #636882;
+      --accent: #0D9488;
+      --accent-hover: #14B8A6;
+      --accent-light: rgba(13, 148, 136, 0.12);
+      --success: #10B981;
+      --danger: #EF4444;
+      --radius: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .header svg {
+      flex-shrink: 0;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card h2 {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="url"] {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      transition: 0.15s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .form-group .help {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .checkbox-row input {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+
+    .checkbox-row label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .btn {
+      padding: 9px 22px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 0 16px var(--accent-light);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      margin-left: 8px;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    #connectionStatus {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: none;
+    }
+
+    #connectionStatus.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    #connectionStatus.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <svg width="36" height="36" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="6" fill="#0D9488" />
+        <path d="M14 4C14 4 7 7 7 13C7 19 14 24 14 24C14 24 21 19 21 13C21 7 14 4 14 4Z" fill="white"
+          fill-opacity="0.25" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M11 14L13 16L17 12" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div>
+        <h1>JobTrust</h1>
+        <p>Extension Settings</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>API Connection</h2>
+      <div class="form-group">
+        <label for="apiUrl">API Server URL</label>
+        <input type="url" id="apiUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+        <p class="help">The URL where your JobTrust API server is running.</p>
+      </div>
+      <button id="testBtn" class="btn btn-secondary" type="button">Test Connection</button>
+      <div id="connectionStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>Behavior</h2>
+      <div class="checkbox-row">
+        <input type="checkbox" id="showBadge" checked>
+        <label for="showBadge">Show floating badge on job sites</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="autoScan">
+        <label for="autoScan">Auto-scan when visiting job pages</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="useLlm" checked>
+        <label for="useLlm">Use Gemini LLM for uncertain cases (free)</label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="saveBtn" class="btn btn-primary">Save Settings</button>
+      <button id="resetBtn" class="btn btn-secondary">Reset Defaults</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Settings saved!</div>
+
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+
+    // Load saved settings
+    chrome.storage.sync.get(
+      ['apiUrl', 'showBadge', 'autoScan', 'useLlm'],
+      (result) => {
+        if (result.apiUrl) $('#apiUrl').value = result.apiUrl;
+        if (result.showBadge !== undefined) $('#showBadge').checked = result.showBadge;
+        if (result.autoScan !== undefined) $('#autoScan').checked = result.autoScan;
+        if (result.useLlm !== undefined) $('#useLlm').checked = result.useLlm;
+      }
+    );
+
+    // Save
+    $('#saveBtn').addEventListener('click', () => {
+      chrome.storage.sync.set({
+        apiUrl: $('#apiUrl').value.trim() || 'http://localhost:8000',
+        showBadge: $('#showBadge').checked,
+        autoScan: $('#autoScan').checked,
+        useLlm: $('#useLlm').checked,
+      }, () => {
+        showToast('Settings saved!');
+      });
+    });
+
+    // Reset
+    $('#resetBtn').addEventListener('click', () => {
+      $('#apiUrl').value = 'http://localhost:8000';
+      $('#showBadge').checked = true;
+      $('#autoScan').checked = false;
+      $('#useLlm').checked = true;
+    });
+
+    // Test connection
+    $('#testBtn').addEventListener('click', async () => {
+      const status = $('#connectionStatus');
+      const url = $('#apiUrl').value.trim() || 'http://localhost:8000';
+
+      status.className = '';
+      status.style.display = 'none';
+      $('#testBtn').textContent = 'Testing...';
+
+      try {
+        const res = await fetch(`${url}/health`, {
+          signal: AbortSignal.timeout(5000),
+        });
+        const data = await res.json();
+
+        status.className = 'success';
+        status.textContent = `Connected! Model: ${data.model_loaded ? 'loaded' : 'not loaded'} | LLM: ${data.llm_provider || 'disabled'} | Device: ${data.device}`;
+      } catch (e) {
+        status.className = 'error';
+        status.textContent = `Connection failed: ${e.message}. Make sure the API server is running.`;
+      }
+
+      status.style.display = 'block';
+      $('#testBtn').textContent = 'Test Connection';
+    });
+
+    // Toast
+    function showToast(msg) {
+      const toast = $('#toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+  </script>
+</body>
+
+</html>

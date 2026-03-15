@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobTrust</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="6" fill="#0D9488" />
+            <path d="M14 4C14 4 7 7 7 13C7 19 14 24 14 24C14 24 21 19 21 13C21 7 14 4 14 4Z" fill="white"
+              fill-opacity="0.25" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M11 14L13 16L17 12" stroke="white" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <div>
+            <h1>JobTrust</h1>
+            <span class="subtitle">Job Posting Verification</span>
+          </div>
+        </div>
+        <button id="settingsBtn" class="icon-btn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
+      </div>
+      <!-- API status indicator -->
+      <div id="apiStatus" class="api-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Checking API...</span>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="scan">Scan Page</button>
+      <button class="tab" data-tab="manual">Manual Entry</button>
+      <button class="tab" data-tab="history">History</button>
+    </nav>
+
+    <!-- Scan Tab -->
+    <section id="tab-scan" class="tab-content active">
+      <div id="pageInfo" class="page-info">
+        <div class="page-info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+        </div>
+        <div class="page-info-text">
+          <p id="pageDetected">Navigate to a job posting on LinkedIn, Indeed, or other supported sites.</p>
+        </div>
+      </div>
+      <button id="scanBtn" class="btn btn-primary btn-full" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+        </svg>
+        Scan This Page
+      </button>
+    </section>
+
+    <!-- Manual Entry Tab -->
+    <section id="tab-manual" class="tab-content">
+      <form id="manualForm" class="manual-form">
+        <div class="form-group">
+          <label for="jobTitle">Job Title <span class="required">*</span></label>
+          <input type="text" id="jobTitle" placeholder="e.g. Senior Software Engineer" required>
+        </div>
+        <div class="form-group">
+          <label for="jobDescription">Description</label>
+          <textarea id="jobDescription" rows="3" placeholder="Full job description..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="jobCompany">Company Profile</label>
+          <textarea id="jobCompany" rows="2" placeholder="Company description or name..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="jobRequirements">Requirements</label>
+          <textarea id="jobRequirements" rows="2" placeholder="Job requirements..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jobSalary">Salary Range</label>
+            <input type="text" id="jobSalary" placeholder="e.g. $80k-$120k">
+          </div>
+          <div class="form-group">
+            <label for="jobLocation">Location</label>
+            <input type="text" id="jobLocation" placeholder="e.g. Remote, NYC">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jobEmail">Contact Email</label>
+            <input type="email" id="jobEmail" placeholder="hr@company.com">
+          </div>
+          <div class="form-group">
+            <label for="jobType">Employment Type</label>
+            <select id="jobType">
+              <option value="">Select...</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="useLlm" checked>
+            <span>Use Gemini LLM for deeper analysis (free)</span>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          Analyze Job Posting
+        </button>
+      </form>
+    </section>
+
+    <!-- History Tab -->
+    <section id="tab-history" class="tab-content">
+      <div id="historyList" class="history-list">
+        <div class="empty-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            opacity="0.4">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>No analyses yet</p>
+          <span>Your scan history will appear here</span>
+        </div>
+      </div>
+      <button id="clearHistory" class="btn btn-ghost btn-full" style="display:none">Clear History</button>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+      <div class="loading-content">
+        <div class="spinner"></div>
+        <p id="loadingText">Analyzing job posting...</p>
+        <span class="loading-sub">Model + LLM hybrid analysis</span>
+      </div>
+    </div>
+
+    <!-- Results Panel (slides up) -->
+    <div id="resultsPanel" class="results-panel hidden">
+      <button id="closeResults" class="close-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+
+      <!-- Risk Gauge -->
+      <div id="riskGauge" class="risk-gauge">
+        <div class="gauge-circle">
+          <svg viewBox="0 0 120 120" class="gauge-svg">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#1C1E2B" stroke-width="10" />
+            <circle id="gaugeArc" cx="60" cy="60" r="52" fill="none" stroke="#0D9488" stroke-width="10"
+              stroke-dasharray="326.73" stroke-dashoffset="326.73" stroke-linecap="round"
+              transform="rotate(-90 60 60)" />
+          </svg>
+          <div class="gauge-text">
+            <span id="gaugePercent" class="gauge-percent">0%</span>
+            <span id="gaugeLabel" class="gauge-label">Fraud Risk</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verdict -->
+      <div id="verdict" class="verdict">
+        <span id="verdictIcon" class="verdict-icon"></span>
+        <span id="verdictText" class="verdict-text"></span>
+      </div>
+
+      <!-- Details Cards -->
+      <div class="details-grid">
+        <!-- Model Card -->
+        <div class="detail-card">
+          <div class="card-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+            <span>ML Model</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-row">
+              <span>Raw probability</span>
+              <span id="rawProb" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Method</span>
+              <span id="methodUsed" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Processing time</span>
+              <span id="procTime" class="stat-value">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Graph Features Card -->
+        <div class="detail-card">
+          <div class="card-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+            <span>Graph Features</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-row">
+              <span>Domain trust</span>
+              <span id="domainTrust" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Domain age</span>
+              <span id="domainAge" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Registrar</span>
+              <span id="domainRegistrar" class="stat-value"
+                style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Free email</span>
+              <span id="freeEmail" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>LinkedIn found</span>
+              <span id="linkedinFound" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Suspicious domain</span>
+              <span id="suspDomain" class="stat-value">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LLM Analysis (conditional) -->
+      <div id="llmSection" class="llm-section hidden">
+        <div class="detail-card llm-card">
+          <div class="card-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1.27A7 7 0 0 1 7.27 19H6a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z" />
+            </svg>
+            <span>Gemini LLM Analysis</span>
+            <span id="llmBadge" class="badge">HIGH</span>
+          </div>
+          <div class="card-body">
+            <div class="stat-row">
+              <span>LLM probability</span>
+              <span id="llmProb" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Provider</span>
+              <span id="llmProvider" class="stat-value">--</span>
+            </div>
+            <div class="stat-row">
+              <span>Cached</span>
+              <span id="llmCached" class="stat-value">--</span>
+            </div>
+          </div>
+          <!-- Red Flags -->
+          <div id="redFlagsSection" class="red-flags-section">
+            <h4>Red Flags</h4>
+            <ul id="redFlagsList" class="red-flags-list"></ul>
+          </div>
+          <!-- Reasoning -->
+          <div id="reasoningSection" class="reasoning-section">
+            <h4>Reasoning</h4>
+            <p id="llmReasoning" class="reasoning-text"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="explanation-card">
+        <p id="explanationText" class="explanation-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
